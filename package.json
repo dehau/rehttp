@@ -1,0 +1,31 @@
+{
+  "name": "rehttp",
+  "version": "1.0.0",
+  "description": "very small overlay on top of node http",
+  "main": "rehttp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "babel lib/rehttp.js >> rehttp.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dehau/rehttp.git"
+  },
+  "keywords": [
+    "http",
+    "promise",
+    "stream",
+    "ES6",
+    "ES2015"
+  ],
+  "author": "dehau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dehau/rehttp/issues"
+  },
+  "homepage": "https://github.com/dehau/rehttp#readme",
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-runtime": "^5.8.25"
+  }
+}
