@@ -8,7 +8,7 @@
       exports: {}
     };
     factory(mod);
-    global.rehttpBrowser = mod.exports;
+    global.rehttp = mod.exports;
   }
 })(this, function (module) {
   'use strict';
