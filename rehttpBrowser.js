@@ -88,6 +88,8 @@
         return h.length;
       }).map(function (header) {
         return header.split(': ');
+      }).map(function (headers) {
+        return header.toLowerCase();
       }).reduce(function (headers, h) {
         return _extends(headers, _defineProperty({}, h[0], h[1]));
       }, {});
@@ -170,7 +172,7 @@
         body: body,
         headers: headers
       }), function (res) {
-        if (res.headers['content-type'] === 'application/json') {
+        if (res.headers['content-type'].split(';')[0] === 'application/json') {
           res.body = JSON.parse(res.body);
         }
 
