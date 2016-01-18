@@ -42,6 +42,44 @@
     return target;
   };
 
+  var _slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
   function EventEmitter() {
     var listeners = {};
 
@@ -88,6 +126,12 @@
         return h.length;
       }).map(function (header) {
         return header.split(': ');
+      }).map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2);
+
+        var name = _ref2[0];
+        var value = _ref2[1];
+        return [name.toLowerCase(), value];
       }).reduce(function (headers, h) {
         return _extends(headers, _defineProperty({}, h[0], h[1]));
       }, {});
@@ -135,13 +179,13 @@
   }
 
   module.exports = {
-    request: function request(_ref) {
-      var url = _ref.url;
-      var _ref$method = _ref.method;
-      var method = _ref$method === undefined ? 'GET' : _ref$method;
-      var body = _ref.body;
-      var _ref$headers = _ref.headers;
-      var headers = _ref$headers === undefined ? {} : _ref$headers;
+    request: function request(_ref3) {
+      var url = _ref3.url;
+      var _ref3$method = _ref3.method;
+      var method = _ref3$method === undefined ? 'GET' : _ref3$method;
+      var body = _ref3.body;
+      var _ref3$headers = _ref3.headers;
+      var headers = _ref3$headers === undefined ? {} : _ref3$headers;
       return _request({
         url: url,
         method: method,
@@ -149,13 +193,13 @@
         headers: headers
       });
     },
-    json: function json(_ref2) {
-      var url = _ref2.url;
-      var _ref2$method = _ref2.method;
-      var method = _ref2$method === undefined ? 'GET' : _ref2$method;
-      var body = _ref2.body;
-      var _ref2$headers = _ref2.headers;
-      var headers = _ref2$headers === undefined ? {} : _ref2$headers;
+    json: function json(_ref4) {
+      var url = _ref4.url;
+      var _ref4$method = _ref4.method;
+      var method = _ref4$method === undefined ? 'GET' : _ref4$method;
+      var body = _ref4.body;
+      var _ref4$headers = _ref4.headers;
+      var headers = _ref4$headers === undefined ? {} : _ref4$headers;
 
       if (body) {
         body = JSON.stringify(body);
@@ -170,7 +214,7 @@
         body: body,
         headers: headers
       }), function (res) {
-        if (res.headers['content-type'] === 'application/json') {
+        if (res.headers['content-type'].split(';')[0] === 'application/json') {
           res.body = JSON.parse(res.body);
         }
 
