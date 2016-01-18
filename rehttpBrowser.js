@@ -42,8 +42,40 @@
     return target;
   };
 
+  function EventEmitter() {
+    var listeners = {};
+
+    this.on = function (event, cb) {
+      listeners[event] = (listeners[event] || []).concat([cb]);
+      return this;
+    };
+
+    this.off = function (event, cb) {
+      listeners[event] = (listeners[event] || []).filter(function (listener) {
+        return listener !== cb;
+      });
+      return this;
+    };
+
+    this.emit = function (event) {
+      for (var _len = arguments.length, data = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        data[_key - 1] = arguments[_key];
+      }
+
+      if (listeners[event]) {
+        listeners[event].forEach(function (cb) {
+          return cb.apply(undefined, data);
+        });
+      }
+
+      return this;
+    };
+
+    this.addEventListener = this.on;
+    this.removeEventListener = this.off;
+  }
+
   var _request = function _request(ctx) {
-    var events = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
     var url = ctx.url;
     var method = ctx.method;
     var body = ctx.body;
@@ -61,6 +93,7 @@
       }, {});
     };
 
+    var events = new EventEmitter();
     var xhr = new XMLHttpRequest();
     var promise = new Promise(function (resolve, reject) {
       xhr.open(method, url, true);
@@ -75,10 +108,10 @@
         });
       });
       xhr.addEventListener('progress', function (progress) {
-        return events('progress', progress);
+        return events.emit('progress', progress);
       });
       xhr.upload.addEventListener('progress', function (progress) {
-        return events('uploadProgress', progress);
+        return events.emit('uploadProgress', progress);
       });
       xhr.addEventListener('error', reject);
       xhr.addEventListener('abort', reject);
@@ -87,9 +120,19 @@
     return _extends(promise, {
       cancel: function cancel() {
         return xhr.abort();
-      }
+      },
+      events: events
     });
   };
+
+  function then(promise, transform) {
+    var cancel = promise.cancel;
+    var events = promise.events;
+    return _extends(promise.then(transform), {
+      cancel: cancel,
+      events: events
+    });
+  }
 
   module.exports = {
     request: function request(_ref) {
@@ -121,15 +164,17 @@
       headers = _extends(headers, {
         'Content-Type': 'application/json'
       });
-      return module.exports.request({
+      return then(module.exports.request({
         url: url,
         method: method,
         body: body,
         headers: headers
-      }).then(function (res) {
+      }), function (res) {
         if (res.headers['content-type'] === 'application/json') {
           res.body = JSON.parse(res.body);
         }
+
+        return res;
       });
     }
   };
