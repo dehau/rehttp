@@ -1,0 +1,29 @@
+{
+  "name": "rehttp",
+  "description": "simplified http requests",
+  "main": "rehttpBrowser.js",
+  "authors": [
+    "dehau"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "http",
+    "promise",
+    "stream",
+    "ES6",
+    "ES2015"
+  ],
+  "homepage": "https://github.com/dehau/rehttp",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
