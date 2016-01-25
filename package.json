@@ -1,6 +1,6 @@
 {
   "name": "rehttp",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "very small overlay on top of node http",
   "main": "rehttp.js",
   "scripts": {

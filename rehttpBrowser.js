@@ -158,7 +158,9 @@
         return events.emit('uploadProgress', progress);
       });
       xhr.addEventListener('error', reject);
-      xhr.addEventListener('abort', reject);
+      xhr.addEventListener('abort', function () {
+        return events.emit('abort');
+      });
       xhr.send(body);
     });
     return _extends(promise, {
